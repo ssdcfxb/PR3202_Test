@@ -114,7 +114,7 @@ void Launcher_GetBaseInfo(void)
 	launcher.info->measure_left_speed = motor[FRIC_L].rx_info.speed;
 	launcher.info->measure_right_speed = motor[FRIC_R].rx_info.speed;
 	launcher.info->measure_dial_speed = motor[DIAL].rx_info.speed;
-	launcher.info->measure_dial_angle = motor[DIAL].rx_info.angle * M2006_ECD_TO_ANGLE;
+	launcher.info->measure_dial_angle = motor[DIAL].rx_info.angle_sum * M2006_ECD_TO_ANGLE;
 	
 }
 
@@ -158,15 +158,10 @@ void Launcher_GetRcState(void)
 				}
 				else if (rc_sensor.info->s2 == RC_SW_UP)
 				{
-					launcher.work_info->launcher_commond = Keep_Shoot;
-					if (launcher.info->last_s2 != rc_sensor.info->s2)
-					{
-						launcher.work_info->dial_status = Reload_Dial;
-						launcher.info->target_dial_angle = launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
-					}
+					launcher.work_info->launcher_commond = Adjust_Speed;
 				}
 			}
-			else if (rc_sensor.info->s2 == RC_SW_DOWN)
+			else if (rc_sensor.info->s1 == RC_SW_DOWN)
 			{
 				if (rc_sensor.info->s2 == RC_SW_MID)
 				{
@@ -174,7 +169,12 @@ void Launcher_GetRcState(void)
 				}
 				else if (rc_sensor.info->s2 == RC_SW_DOWN)
 				{
-					launcher.work_info->launcher_commond = Bubble_Shoot;
+					launcher.work_info->launcher_commond = Keep_Shoot;
+					if (launcher.info->last_s2 != rc_sensor.info->s2)
+					{
+						launcher.work_info->dial_status = Reload_Dial;
+						launcher.info->target_dial_angle = launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
+					}
 				}
 				else if (rc_sensor.info->s2 == RC_SW_UP)
 				{
@@ -200,12 +200,12 @@ void Launcher_GetRcState(void)
 
 
 
-void Fric_StepCheck(void);
+void Fric_StatusCheck(void);
 void Dial_StatusCheck(void);
 
 void Get_LauncherStatus(void)
 {
-	Fric_StepCheck();
+	Fric_StatusCheck();
 	
 	Dial_StatusCheck();
 	
@@ -213,9 +213,18 @@ void Get_LauncherStatus(void)
 	launcher.info->last_s2 = rc_sensor.info->s2;
 }
 
-// Ä¦²ÁÂÖÌø±ä¼ì²â
-void Fric_StepCheck(void)
+
+void Fric_SpeedInc(void);
+void Fric_SpeedDec(void);
+
+/**
+  * @brief  Ä¦²ÁÂÖ¿ªÆôÌø±ä¼ì²âÓëÉäËÙµ÷Õû*
+  * @param  
+  * @retval 
+  */
+void Fric_StatusCheck(void)
 {
+	static int16_t last_thumbwheel = 0;
 	if ((launcher.work_info->launcher_commond == Fric_Toggle)
 		&& (launcher.info->last_s2 != rc_sensor.info->s2))
 	{
@@ -232,24 +241,93 @@ void Fric_StepCheck(void)
 			launcher.work_info->fric_status = On_Fric;
 		}
 	}
+	if (launcher.work_info->launcher_commond == Adjust_Speed)
+	{
+		if (last_thumbwheel <= -600 && rc_sensor.info->thumbwheel > -590)
+		{
+			Fric_SpeedInc();
+		}
+		else if (last_thumbwheel >= 600 && rc_sensor.info->thumbwheel < 590)
+		{
+			Fric_SpeedDec();
+		}
+		last_thumbwheel = rc_sensor.info->thumbwheel;
+	}
 }
 
-// ²¦ÅÌ¶Â×ª¼ì²â
+void Fric_SpeedInc(void)
+{
+	if(launcher.conf->fric_speed == Fric_30)
+	{
+		launcher.conf->fric_speed = Fric_15;
+	}
+	else if (launcher.conf->fric_speed == Fric_22)
+	{
+		launcher.conf->fric_speed = Fric_30;
+	}
+	else if (launcher.conf->fric_speed == Fric_20)
+	{
+		launcher.conf->fric_speed = Fric_22;
+	}
+	else if (launcher.conf->fric_speed == Fric_18)
+	{
+		launcher.conf->fric_speed = Fric_20;
+	}
+	else if (launcher.conf->fric_speed == Fric_15)
+	{
+		launcher.conf->fric_speed = Fric_18;
+	}
+}
+
+void Fric_SpeedDec(void)
+{
+	if(launcher.conf->fric_speed == Fric_15)
+	{
+		launcher.conf->fric_speed = Fric_15;
+	}
+	else if (launcher.conf->fric_speed == Fric_18)
+	{
+		launcher.conf->fric_speed = Fric_15;
+	}
+	else if (launcher.conf->fric_speed == Fric_20)
+	{
+		launcher.conf->fric_speed = Fric_18;
+	}
+	else if (launcher.conf->fric_speed == Fric_22)
+	{
+		launcher.conf->fric_speed = Fric_20;
+	}
+	else if (launcher.conf->fric_speed == Fric_30)
+	{
+		launcher.conf->fric_speed = Fric_22;
+	}
+}
+
+
+/**
+  * @brief  ²¦ÅÌ¿ØÖÆÓë¶Â×ª¼ì²â
+  * @param  
+  * @retval 
+  */
 void Dial_StatusCheck(void)
 {
+	if (launcher.work_info->launcher_commond == Func_Reset)
+	{
+		launcher.work_info->dial_status = WaitCommond_Dial;
+	}
+	if (launcher.work_info->dial_status != WaitCommond_Dial && launcher.work_info->fric_status != On_Fric)
+	{
+		launcher.work_info->dial_status = WaitCommond_Dial;
+	}
 	if (launcher.work_info->dial_status == Reload_Dial)
 	{
 		if (launcher.info->measure_dial_angle < launcher.info->target_dial_angle + launcher.conf->lock_angle_check)
 		{
-			if (launcher.work_info->launcher_commond == Keep_Shoot)
-			{
-				launcher.info->target_dial_angle = launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
-			}
-			else if (launcher.work_info->launcher_commond == Single_Shoot)
+			if (launcher.work_info->launcher_commond == Single_Shoot)
 			{
 				launcher.work_info->dial_status = WaitCommond_Dial;
 			}
-			else if (launcher.work_info->launcher_commond == Bubble_Shoot)
+			else if (launcher.work_info->launcher_commond == Keep_Shoot)
 			{
 				if (++launcher.work_info->shoot_cnt == 60000)
 				{
@@ -335,7 +413,7 @@ void Fric_Ctrl(void)
 		launcher.info->target_right_speed = launcher.conf->fric_speed;
 	
 		launcher_out[motor[FRIC_L].id.buff_p] = motor[FRIC_L].c_speed(&motor[FRIC_L], launcher.info->target_left_speed);
-		launcher_out[motor[FRIC_R].id.buff_p] = motor[FRIC_R].c_speed(&motor[FRIC_R], launcher.info->target_left_speed);
+		launcher_out[motor[FRIC_R].id.buff_p] = motor[FRIC_R].c_speed(&motor[FRIC_R], launcher.info->target_right_speed);
 		
 	}
 	else if (launcher.work_info->fric_status == Off_Fric || launcher.work_info->fric_status == WaitCommond_Fric)
@@ -344,7 +422,7 @@ void Fric_Ctrl(void)
 		launcher.info->target_right_speed = 0.0f;
 		
 		launcher_out[motor[FRIC_L].id.buff_p] = motor[FRIC_L].c_speed(&motor[FRIC_L], launcher.info->target_left_speed);
-		launcher_out[motor[FRIC_R].id.buff_p] = motor[FRIC_R].c_speed(&motor[FRIC_R], launcher.info->target_left_speed);
+		launcher_out[motor[FRIC_R].id.buff_p] = motor[FRIC_R].c_speed(&motor[FRIC_R], launcher.info->target_right_speed);
 		
 	}
 }
@@ -372,12 +450,12 @@ void Dial_Ctrl(void)
 			launcher.info->target_dial_angle += 360.0f;
 		}
 		
-		launcher_out[motor[DIAL].id.buff_p] = motor[DIAL].c_angle(&motor[DIAL], launcher.info->target_dial_angle);
+		launcher_out[motor[DIAL].id.buff_p] = motor[DIAL].c_posit(&motor[DIAL], launcher.info->target_dial_angle / M2006_ECD_TO_ANGLE);
 		
 	}
 	else 
 	{
-		launcher_out[motor[DIAL].id.buff_p] = motor[DIAL].c_angle(&motor[DIAL], launcher.info->measure_dial_angle);
+		launcher_out[motor[DIAL].id.buff_p] = motor[DIAL].c_posit(&motor[DIAL], launcher.info->measure_dial_angle / M2006_ECD_TO_ANGLE);
 	}
 	
 }

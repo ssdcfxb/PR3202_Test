@@ -59,10 +59,10 @@ motor_t motor[MOTOR_LIST] =
 	float   iout_max;
 	float 	out_max;
 */
-float fric_r_speed_pid_param[7] = {15,0.5,0,0,6000,6000,12000};
-float fric_l_speed_pid_param[7] = {15,0.5,0,0,6000,6000,12000};
-float dial_angle_in_pid_param[7] = {17,1.2,0,0,6000,6000,12000};
-float dial_angle_pid_param[7] = {200,0,0,0,0,0,10000};
+float fric_r_speed_pid_param[7] = {15.f, 0.5f, 0.f, 0.f, 6000.f, 6000.f, 12000.f};
+float fric_l_speed_pid_param[7] = {15.f, 0.5f, 0.f, 0.f, 6000.f, 6000.f, 12000.f};
+float dial_position_in_pid_param[7] = {17.f, 1.2f, 0.f, 0.f, 6000.f, 6000.f, 12000.f};
+float dial_position_pid_param[7] = {0.24414f, 0.f, 0.f, 0.f, 0.f, 0.f, 10000.f};
 
 
 
@@ -78,8 +78,8 @@ void motor_all_init(void)
 	//电机速度pid初始化
 	motor[FRIC_R].pid_init(&motor[FRIC_R].pid.speed,fric_r_speed_pid_param);
 	motor[FRIC_L].pid_init(&motor[FRIC_L].pid.speed,fric_l_speed_pid_param);
-	motor[DIAL].pid_init(&motor[DIAL].pid.angle_in,dial_angle_in_pid_param);
-	motor[DIAL].pid_init(&motor[DIAL].pid.angle,dial_angle_pid_param);
+	motor[DIAL].pid_init(&motor[DIAL].pid.position_in,dial_position_in_pid_param);
+	motor[DIAL].pid_init(&motor[DIAL].pid.position,dial_position_pid_param);
 	
 	
 }

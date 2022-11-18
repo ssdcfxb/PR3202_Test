@@ -98,7 +98,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	DRIVER_Init();
 	DEVICE_Init();
-	launcher.init();
   /* USER CODE END 2 */
 
   /* Infinite loop */

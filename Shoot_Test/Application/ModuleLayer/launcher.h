@@ -35,9 +35,9 @@ typedef enum
 {
 	Fric_Toggle,    // 开关摩擦轮
 	Func_Reset,     // 功能复位
-	Keep_Shoot,     // 连发
+	Adjust_Speed,   // 调整摩擦轮转速
 	Single_Shoot,   // 单发
-	Bubble_Shoot,   // 间隔单发
+	Keep_Shoot,     // 连发
 	WaitCommond_L // 等待指令
 } launcher_commond_e;
 

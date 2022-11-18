@@ -2,7 +2,6 @@
 #include "tim.h"
 
 #include "user_main.h"
-#include "launcher.h"
 
 /*	
 	发送数组
@@ -10,6 +9,17 @@
 int16_t send_buff[4];
 float tar;
 
+
+/**
+ *	@brief	用户设备初始化
+ */
+void USER_Init(void)
+{
+	motor_all_init();
+	HAL_TIM_Base_Init(&htim4);
+	HAL_TIM_Base_Start_IT(&htim4);
+	launcher.init();
+}
 
 
 /**
@@ -43,6 +53,11 @@ float tar;
 	 }
  }
 
+ 
+ 
+ 
+ 
+ 
 //void StartControlTask(void const * argument)
 //{
 //	

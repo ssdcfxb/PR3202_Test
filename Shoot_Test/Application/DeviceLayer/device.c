@@ -26,7 +26,4 @@ dev_list_t dev_list = {
 void DEVICE_Init(void)
 {
 	dev_list.rc_sen->init(dev_list.rc_sen);
-	motor_all_init();
-	HAL_TIM_Base_Init(&htim4);
-	HAL_TIM_Base_Start_IT(&htim4);
 }
