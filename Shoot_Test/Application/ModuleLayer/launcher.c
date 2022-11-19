@@ -203,8 +203,12 @@ void Launcher_GetRcState(void)
 					if (launcher.info->last_s2 != rc_sensor.info->s2)
 					{
 						launcher.work_info->dial_status = Reload_Dial;
-						launcher.info->target_dial_angle = launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
+						launcher.info->target_dial_angle = 25.f * launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
 					}
+				}
+				else if (rc_sensor.info->s2 == RC_SW_UP)
+				{
+					launcher.work_info->launcher_commond = Func_Reset;
 				}
 			}
 		}
@@ -362,7 +366,7 @@ void Dial_StatusCheck(void)
 			}
 			else if (launcher.work_info->launcher_commond == Sweep_Shoot)
 			{
-				launcher.info->target_dial_angle = launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
+				launcher.info->target_dial_angle = 25.f * launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
 			}
 		}
 		else 
