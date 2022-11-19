@@ -1,3 +1,4 @@
+
 #include "launcher.h"
 
 #include "rp_math.h"
@@ -5,6 +6,8 @@
 
 //临时函数
 extern void CAN1_Send_With_int16_to_uint8(uint32_t stdId, int16_t *dat);
+
+float left_speed = 0, right_speed = 0;
 
 int16_t    launcher_out[3];
 
@@ -32,13 +35,13 @@ launcher_work_info_t  launcher_work_info = {
 };
 
 launcher_conf_t   launcher_conf = {
-	.fric_speed = Fric_15,
+	.fric_speed = Fric_30,
 	.dial_speed = -2500.0f,
 	.lock_angle_check = 1.5f,
 	.lock_cnt = 50,
 	.Back_Angle = 45.0f,
 	.Load_Angle = -45.0f,
-	.wait_time = 2000,  //发射间隔时间，单位ms
+	.wait_time = 1000,  //发射间隔时间，单位ms
 };
 
 launcher_t launcher = {
@@ -116,6 +119,8 @@ void Launcher_GetBaseInfo(void)
 	launcher.info->measure_dial_speed = motor[DIAL].rx_info.speed;
 	launcher.info->measure_dial_angle = motor[DIAL].rx_info.angle_sum * M2006_ECD_TO_ANGLE;
 	
+	left_speed = motor[FRIC_L].rx_info.speed;
+	right_speed = motor[FRIC_R].rx_info.speed;
 }
 
 
@@ -179,6 +184,22 @@ void Launcher_GetRcState(void)
 				else if (rc_sensor.info->s2 == RC_SW_UP)
 				{
 					launcher.work_info->launcher_commond = Single_Shoot;
+					if (launcher.info->last_s2 != rc_sensor.info->s2)
+					{
+						launcher.work_info->dial_status = Reload_Dial;
+						launcher.info->target_dial_angle = launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
+					}
+				}
+			}
+			else if (rc_sensor.info->s1 == RC_SW_MID)
+			{
+				if (rc_sensor.info->s2 == RC_SW_MID)
+				{
+					launcher.work_info->launcher_commond = Func_Reset;
+				}
+				else if (rc_sensor.info->s2 == RC_SW_DOWN)
+				{
+					launcher.work_info->launcher_commond = Sweep_Shoot;
 					if (launcher.info->last_s2 != rc_sensor.info->s2)
 					{
 						launcher.work_info->dial_status = Reload_Dial;
@@ -338,6 +359,10 @@ void Dial_StatusCheck(void)
 				{
 					launcher.info->target_dial_angle = launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
 				}
+			}
+			else if (launcher.work_info->launcher_commond == Sweep_Shoot)
+			{
+				launcher.info->target_dial_angle = launcher.conf->Load_Angle + launcher.info->measure_dial_angle;
 			}
 		}
 		else 

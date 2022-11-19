@@ -28,7 +28,7 @@
 /* USER CODE BEGIN Includes */
 #include "driver.h"
 #include "device.h"
-#include "launcher.h"
+#include "user_main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,6 +98,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	DRIVER_Init();
 	DEVICE_Init();
+	USER_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */

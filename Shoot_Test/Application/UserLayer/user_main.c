@@ -3,12 +3,7 @@
 
 #include "user_main.h"
 
-/*	
-	发送数组
-*/
-int16_t send_buff[4];
-float tar;
-
+void user_main(void);
 
 /**
  *	@brief	用户设备初始化
@@ -23,41 +18,66 @@ void USER_Init(void)
 
 
 /**
- *	@brief	用户应用层
+ *	@brief	用户应用层，1ms执行一次
  */
- void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+void user_main(void)
+{
+	//电机心跳，用于判断是否失联
+	motor[FRIC_R].heartbeat(&motor[FRIC_R]);
+	motor[FRIC_L].heartbeat(&motor[FRIC_L]);
+	motor[DIAL].heartbeat(&motor[DIAL]);
+	rc_sensor.heart_beat(&rc_sensor);
+	 
+	if (launcher.info->rc_work_state == DEV_ONLINE)
+	{
+		launcher.ctrl();
+	}
+	else
+	{
+		launcher.self_protect();
+	}
+}
+
+
+
+/**
+ *	@brief	定时器中断回调，1ms进入一次
+ */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+ if (htim->Instance == TIM4)
  {
-	 if (htim->Instance == TIM4)
+	 static uint16_t i = 0;
+	 
+	 if (++i == 60000)
 	 {
-		 static uint16_t i = 0;
-		 
-		 if (++i == 60000)
-		 {
-			 i = 0;
-		 }
-		 
-		//电机心跳，用于判断是否失联
-		motor[FRIC_R].heartbeat(&motor[FRIC_R]);
-		motor[FRIC_L].heartbeat(&motor[FRIC_L]);
-		motor[DIAL].heartbeat(&motor[DIAL]);
-		rc_sensor.heart_beat(&rc_sensor);
-		 
-		if (launcher.info->rc_work_state == DEV_ONLINE)
-		{
-			launcher.ctrl();
-		}
-		else
-		{
-			launcher.self_protect();
-		}
+		 i = 0;
 	 }
+	 
+	 user_main();
+	
  }
+}
 
  
  
  
  
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+///*	
+//	发送数组
+//*/
+//int16_t send_buff[4];
+//float tar;
 //void StartControlTask(void const * argument)
 //{
 //	
