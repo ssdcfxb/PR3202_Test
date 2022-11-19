@@ -1,19 +1,21 @@
-/*
-* EXAMPLE
-*	RP MOTOR_BAG
-*	2022.11.6 
-* AUTHOR CCB HXZP
-*
-*使用电机前必须配置好电机的类型、id号、驱动方式，以及init指针函数初始化
-*使用pid前也需要进行pid初始化，否则无法使用
-*可以直接使用内置函数进行pid控制 也可以直接使用库内定义函数或者自己定义的函数
-*kt系列电机：使用kt系列电机前需要先实例化motor_9025_info_t，再与motor内的指针联系，其余步骤无异
-*/
+/**
+ * @file        user_motor.c
+ * @author      SSDCFXB
+ * @Version     V1.0
+ * @date        18-November-2022
+ * @brief       User Motor Devives
+ * @update
+ */
 
+/* Includes ------------------------------------------------------------------*/
 #include "motor.h"
 #include "user_motor.h"
 
 
+/* Private macro -------------------------------------------------------------*/
+/* Private function prototypes -----------------------------------------------*/
+/* Private typedef -----------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
 /*
 * 使用电机前必须配置好电机的类型、id号、驱动方式
 */
@@ -47,7 +49,6 @@ motor_t motor[MOTOR_LIST] =
 };
 
 
-
 /*
 	定义一个数组作为传入参数，不使用结构体是因为数组初始化展开为一维的看起来比较简约，但是要记住他们的位置和含义
 	float	  kp;
@@ -64,6 +65,9 @@ float fric_l_speed_pid_param[7] = {15.f, 0.5f, 0.f, 0.f, 6000.f, 6000.f, 12000.f
 float dial_position_in_pid_param[7] = {17.f, 1.2f, 0.f, 0.f, 6000.f, 6000.f, 12000.f};
 float dial_position_pid_param[7] = {0.24414f, 0.f, 0.f, 0.f, 0.f, 0.f, 10000.f};
 
+/* Exported variables --------------------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
+/* Exported functions --------------------------------------------------------*/
 
 
 /**

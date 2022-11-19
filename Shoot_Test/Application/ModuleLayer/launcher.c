@@ -1,19 +1,48 @@
+/**
+ * @file        launcher.c
+ * @author      SSDCFXB
+ * @Version     V1.0
+ * @date        18-November-2022
+ * @brief       Launcher Control Center
+ * @update
+ */
 
+/* Includes ------------------------------------------------------------------*/
 #include "launcher.h"
 
 #include "rp_math.h"
 #include "rm_protocol.h"
 
-//临时函数
-extern void CAN1_Send_With_int16_to_uint8(uint32_t stdId, int16_t *dat);
-
-float left_speed = 0, right_speed = 0;
-
-int16_t    launcher_out[3];
-
+/* Private macro -------------------------------------------------------------*/
+/* Private function prototypes -----------------------------------------------*/
+/* Private typedef -----------------------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 void Launcher_Init(void);
 void Launcher_Ctrl(void);
 void Launcher_SelfProtect(void);
+
+void Launcher_GetInfo(void);
+void Launcher_GetBaseInfo(void);
+void Launcher_GetCtrlInfo(void);
+void Launcher_GetRcState(void);
+void Get_LauncherStatus(void);
+void Fric_StatusCheck(void);
+void Dial_StatusCheck(void);
+
+void Launcher_MotorCtrl(void);
+void Fric_Ctrl(void);
+void Dial_Ctrl(void);
+
+void Launcher_SendOut(void);
+
+void Launcher_Stop(void);
+
+/* Exported functions --------------------------------------------------------*/
+//临时发送函数
+extern void CAN1_Send_With_int16_to_uint8(uint32_t stdId, int16_t *dat);
+/* Private variables ---------------------------------------------------------*/
+float      left_speed = 0, right_speed = 0;
+int16_t    launcher_out[3];
 
 // 发射机构设备
 launcher_dev_t		launcher_dev = {
@@ -54,7 +83,7 @@ launcher_t launcher = {
 	.self_protect = Launcher_SelfProtect,
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/* Exported variables --------------------------------------------------------*/
 
 /**
   * @brief  发射机构初始化
@@ -74,9 +103,6 @@ void Launcher_Init(void)
 
 
 
-void Launcher_GetInfo(void);
-void Launcher_MotorCtrl(void);
-void Launcher_SendOut(void);
 /**
   * @brief  发射机构控制
   * @param  
@@ -92,10 +118,6 @@ void Launcher_Ctrl(void)
 }
 
 
-
-void Launcher_GetBaseInfo(void);
-void Launcher_GetCtrlInfo(void);
-void Get_LauncherStatus(void);
 /**
   * @brief  读取发射机构相关信息
   * @param  
@@ -124,7 +146,6 @@ void Launcher_GetBaseInfo(void)
 }
 
 
-void Launcher_GetRcState(void);
 
 void Launcher_GetCtrlInfo(void)
 {
@@ -224,9 +245,6 @@ void Launcher_GetRcState(void)
 
 
 
-
-void Fric_StatusCheck(void);
-void Dial_StatusCheck(void);
 
 void Get_LauncherStatus(void)
 {
@@ -420,8 +438,6 @@ void Dial_StatusCheck(void)
 
 
 
-void Fric_Ctrl(void);
-void Dial_Ctrl(void);
 /**
   * @brief  发射机构电机控制
   * @param  
@@ -507,7 +523,6 @@ void Launcher_SendOut(void)
 
 
 
-void Launcher_Stop(void);
 /**
   * @brief  发射机构控制离线保护
   * @param  

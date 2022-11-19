@@ -1,12 +1,28 @@
+/**
+ * @file        user_main.c
+ * @author      SSDCFXB
+ * @Version     V1.0
+ * @date        18-November-2022
+ * @brief       User Main
+ * @update
+ */
+
+/* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "tim.h"
 
 #include "user_main.h"
-
+/* Private macro -------------------------------------------------------------*/
+/* Private function prototypes -----------------------------------------------*/
+/* Private typedef -----------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
+/* Exported variables --------------------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 void user_main(void);
+/* Exported functions --------------------------------------------------------*/
 
 /**
- *	@brief	用户设备初始化
+ *	@brief	用户设备初始化(Init)
  */
 void USER_Init(void)
 {
@@ -18,7 +34,7 @@ void USER_Init(void)
 
 
 /**
- *	@brief	用户应用层，1ms执行一次
+ *	@brief	用户应用层，1ms执行一次(Loop)
  */
 void user_main(void)
 {

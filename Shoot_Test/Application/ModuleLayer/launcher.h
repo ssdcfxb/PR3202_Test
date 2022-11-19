@@ -1,17 +1,29 @@
+/**
+ * @file        launcher.c\h
+ * @author      SSDCFXB
+ * @Version     V1.0
+ * @date        18-November-2022
+ * @brief       Launcher Control Center
+ * @update
+ */
+ 
 #ifndef __LAUNCHER_H
 #define __LAUNCHER_H
 
+/* Includes ------------------------------------------------------------------*/
 #include "rp_config.h"
 
 #include "rc_sensor.h"
 #include "user_motor.h"
 
+/* Exported macro ------------------------------------------------------------*/
 #define Fric_15 4400.0f
 #define Fric_18 4700.0f
 #define Fric_20 4950.0f
 #define Fric_22 5200.0f
 #define Fric_30 7020.0f
 
+/* Exported types ------------------------------------------------------------*/
 // Ä¦²ÁÂÖ×´Ì¬Ã¶¾Ù
 typedef enum
 {
@@ -105,6 +117,7 @@ typedef struct
 
 extern launcher_t launcher;
 
+/* Exported functions --------------------------------------------------------*/
 //void Launcher_GetInfo(void);
 //void Launcher_Stop(void);
 //void Launcher_RcCtrl(void);
