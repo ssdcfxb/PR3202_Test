@@ -36,6 +36,7 @@ typedef enum
 	Fric_Toggle,    // 开关摩擦轮
 	Func_Reset,     // 功能复位
 	Adjust_Speed,   // 调整摩擦轮转速
+	Sweep_Shoot,    // 快速连发
 	Single_Shoot,   // 单发
 	Keep_Shoot,     // 连发
 	WaitCommond_L // 等待指令
