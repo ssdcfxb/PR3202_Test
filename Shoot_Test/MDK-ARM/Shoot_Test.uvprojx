@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Application/ConfigLayer;../Application/DeviceLayer/Sensor;../Application/DeviceLayer;../Application/DriverLayer;../Application/ProtocolLayer;../Application/AlgorithmLayer;../Application/HardwareLayer/rp_motor_pack;../Application/UserLayer;../Application/ModuleLayer</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Application/ConfigLayer;../Application/DeviceLayer/Sensor;../Application/DeviceLayer;../Application/DriverLayer;../Application/ProtocolLayer;../Application/AlgorithmLayer;../Application/UserLayer;../Application/ModuleLayer;..\Application\HardwareLayer\rp_motor_pack V3.0</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -482,7 +482,7 @@
             <File>
               <FileName>motor.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Application\HardwareLayer\rp_motor_pack\motor.c</FilePath>
+              <FilePath>..\Application\HardwareLayer\rp_motor_pack V3.0\motor.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,12 +1,15 @@
 /**
- * @file        launcher.c\h
+ * @file        launcher.c/.h
  * @author      SSDCFXB
  * @Version     V1.0
- * @date        18-November-2022
+ * @date        20-November-2022
  * @brief       Launcher Control Center
  * @update
+ *              v1.0(18-November-2022)
+ *              v1.1(20-November-2022)
+ *                  1.修改速射连发模式，闭角度环->闭速度环
  */
- 
+
 #ifndef __LAUNCHER_H
 #define __LAUNCHER_H
 
@@ -35,8 +38,9 @@ typedef enum
 // 拨盘状态枚举
 typedef enum
 {
-	Reload_Dial,   // 补弹
-	F_Lock_Dial,   // 正向卡弹
+	Reload_Dial,     // 补弹
+	F_Lock_Dial,     // 正向卡弹
+	SpeedKeep_Dial,  // 速度保持
 //	Unload_Dial,   // 退弹
 //	B_Lock_Dial ,  // 反向卡弹
 	WaitCommond_Dial // 等待指令
@@ -97,6 +101,7 @@ typedef struct
 {
 	float    fric_speed;
 	float    dial_speed;
+	float    dial_torque_limit;
 	float    lock_angle_check;
 	int16_t  lock_cnt;
 	float    Back_Angle;

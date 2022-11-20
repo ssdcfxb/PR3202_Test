@@ -1,5 +1,5 @@
 /**
- * @file        user_main.c\h
+ * @file        user_main.c/.h
  * @author      SSDCFXB
  * @Version     V1.0
  * @date        18-November-2022
